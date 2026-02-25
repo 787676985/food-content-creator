@@ -34,7 +34,7 @@ model ImageConfig {
 // 社交媒体账号
 model SocialAccount {
   id           String   @id @default(cuid())
-  platform     String   // douyin, xiaohongshu, toutiao
+  platform     String   // douyin, xiaohongshu, toutiao, weibo
   accountName  String
   accountId    String?  // 平台账号ID
   avatar       String?  // 头像URL
@@ -76,14 +76,50 @@ model Content {
   updatedAt   DateTime @updatedAt
 }
 
-// 热点记录
-model TrendRecord {
+// 热门内容（从各平台抓取或用户添加）
+model HotContent {
+  id            String   @id @default(cuid())
+  title         String
+  content       String?  // 内容摘要
+  platform      String   // 来源平台
+  category      String   // food, pet, general
+  author        String?  // 作者名称
+  authorId      String?  // 作者ID
+  authorAvatar  String?  // 作者头像
+  coverImage    String?  // 封面图
+  link          String?  // 原文链接
+  
+  // 数据指标
+  likes         Int      @default(0)
+  comments      Int      @default(0)
+  shares        Int      @default(0)
+  views         Int      @default(0)
+  collects      Int      @default(0)  // 收藏数
+  
+  // AI分析结果
+  analysis      String?  // AI分析内容特点
+  keywords      String?  // 关键词，逗号分隔
+  styleTags     String?  // 风格标签
+  
+  // 用户操作
+  isFavorite    Boolean  @default(false)  // 是否收藏
+  isAnalyzed    Boolean  @default(false)  // 是否已分析
+  
+  publishedAt   DateTime? // 发布时间
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// 热榜记录
+model HotRank {
   id          String   @id @default(cuid())
-  keyword     String
-  title       String
-  snippet    String?
-  source      String?
-  category    String   // food, pet
+  platform    String   // weibo, douyin, xiaohongshu, toutiao
+  keyword     String   // 热搜关键词
+  rank        Int      // 排名
+  heat        Int      @default(0) // 热度值
+  category    String   @default("general") // food, pet, general
+  link        String?  // 链接
+  
   createdAt   DateTime @default(now())
 }
 
