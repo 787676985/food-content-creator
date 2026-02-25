@@ -2,7 +2,7 @@
 # 内容创作平台 - 极空间部署配置
 # =====================================================
 # 支持美食和宠物两个领域
-# 数据持久化存储，配置不会丢失
+# 实时热榜数据，AI分析热门内容
 # 访问地址: http://你的极空间IP:3020
 
 services:
@@ -41,7 +41,6 @@ services:
           echo '[1/5] 克隆项目代码...'
           git clone --depth 1 https://github.com/787676985/food-content-creator.git /tmp/repo
           cp -r /tmp/repo/* /app/
-          cp -r /tmp/repo/.* /app/ 2>/dev/null || true
           rm -rf /tmp/repo
         else
           echo '[1/5] 项目已存在，跳过克隆'
