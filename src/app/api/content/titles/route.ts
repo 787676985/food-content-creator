@@ -1,22 +1,25 @@
-import ZAI from 'z-ai-web-dev-sdk';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { getCurrentAIConfig } from '@/app/api/config/route'
+import { AIClient } from '@/lib/ai-client'
+import ZAI from 'z-ai-web-dev-sdk'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { content, platform, count = 5 } = body;
+    const body = await request.json()
+    const { content, platform, count = 5 } = body
 
     if (!content) {
-      return NextResponse.json({ error: '请输入内容' }, { status: 400 });
+      return NextResponse.json({ error: '请输入内容' }, { status: 400 })
     }
 
-    const zai = await ZAI.create();
+    // 获取配置
+    const aiConfig = getCurrentAIConfig()
 
     const platformPrompts: Record<string, string> = {
       douyin: '抖音标题风格：简短有力、悬念感、数字开头、引发好奇',
       xiaohongshu: '小红书标题风格：精致感、情感共鸣、带emoji、种草感',
       toutiao: '今日头条标题风格：新闻感、信息量大、有争议性',
-    };
+    }
 
     const systemPrompt = `你是一位专业的美食领域标题优化专家。
 平台特点：${platformPrompts[platform] || platformPrompts.douyin}
@@ -25,28 +28,42 @@ export async function POST(request: NextRequest) {
 1. 每个标题都要有吸引力，能引发点击欲望
 2. 符合平台调性和用户习惯
 3. 标题要有差异化，覆盖不同角度
-4. 直接输出标题列表，每行一个，不要编号`;
+4. 直接输出标题列表，每行一个，不要编号`
 
-    const completion = await zai.chat.completions.create({
-      messages: [
+    let titlesText: string
+
+    // 优先使用用户配置的AI服务
+    if (aiConfig.enabled && aiConfig.apiKey) {
+      const client = new AIClient(aiConfig)
+      titlesText = await client.chatCompletion([
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `请为以下美食内容生成爆款标题：\n${content}` },
-      ],
-    });
+      ])
+    } else {
+      // 使用默认的z-ai服务
+      const zai = await ZAI.create()
+      const completion = await zai.chat.completions.create({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `请为以下美食内容生成爆款标题：\n${content}` },
+        ],
+      })
+      titlesText = completion.choices[0]?.message?.content || ''
+    }
 
-    const titlesText = completion.choices[0]?.message?.content || '';
-    const titles = titlesText.split('\n').filter((t) => t.trim());
+    const titles = titlesText.split('\n').filter((t) => t.trim())
 
     return NextResponse.json({
       success: true,
       titles,
       platform,
-    });
+      usedCustomAI: aiConfig.enabled && !!aiConfig.apiKey,
+    })
   } catch (error) {
-    console.error('Title generation error:', error);
+    console.error('Title generation error:', error)
     return NextResponse.json(
-      { error: '标题生成失败，请重试' },
+      { error: error instanceof Error ? error.message : '标题生成失败，请重试' },
       { status: 500 }
-    );
+    )
   }
 }

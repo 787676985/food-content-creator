@@ -29,7 +29,9 @@ import {
   Lightbulb,
   Star,
   Bookmark,
+  Settings,
 } from 'lucide-react'
+import { SettingsPanel } from '@/components/settings-panel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -124,6 +126,9 @@ export default function Home() {
   const [imageStyle, setImageStyle] = useState<ImageStyle>('food')
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
+
+  // 设置面板状态
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   // 内容生成
   const handleGenerate = useCallback(async () => {
@@ -276,10 +281,22 @@ export default function Home() {
                 <Zap className="h-3 w-3 text-yellow-500" />
                 AI驱动
               </Badge>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="gap-1"
+                onClick={() => setSettingsOpen(true)}
+              >
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">设置</span>
+              </Button>
             </div>
           </div>
         </div>
       </header>
+
+      {/* 设置面板 */}
+      <SettingsPanel open={settingsOpen} onOpenChange={setSettingsOpen} />
 
       {/* 主内容区 */}
       <main className="container mx-auto px-4 py-6">
