@@ -185,19 +185,37 @@ export default function Home() {
     } catch (e) { console.error('Load config error:', e) }
   }
 
-  const loadHotRanks = async () => {
+  const loadHotRanks = async (forceRefresh = false) => {
+    setIsLoadingHot(true)
     try {
-      const res = await fetch(`/api/hot/rank?platform=${selectedPlatform}&category=${category}`)
+      const url = forceRefresh 
+        ? `/api/hot/rank?platform=${selectedPlatform}&category=${category}&refresh=true`
+        : `/api/hot/rank?platform=${selectedPlatform}&category=${category}`
+      const res = await fetch(url)
       const data = await res.json()
-      if (data.success) setHotRanks(data.ranks)
+      if (data.success) {
+        setHotRanks(data.ranks)
+        if (forceRefresh && data.source === 'web_search') {
+          toast.success('已获取最新热榜')
+        }
+      }
     } catch (e) { console.error('Load hot ranks error:', e) }
+    finally { setIsLoadingHot(false) }
   }
 
-  const loadHotContents = async () => {
+  const loadHotContents = async (forceRefresh = false) => {
     try {
-      const res = await fetch(`/api/hot/content?category=${category}`)
+      const url = forceRefresh 
+        ? `/api/hot/content?category=${category}&refresh=true`
+        : `/api/hot/content?category=${category}`
+      const res = await fetch(url)
       const data = await res.json()
-      if (data.success) setHotContents(data.contents)
+      if (data.success) {
+        setHotContents(data.contents)
+        if (forceRefresh && data.source === 'web_search') {
+          toast.success('已获取最新热门内容')
+        }
+      }
     } catch (e) { console.error('Load hot contents error:', e) }
   }
 
@@ -323,18 +341,13 @@ export default function Home() {
 
   // 刷新热榜
   const handleRefreshHotRanks = useCallback(async () => {
-    setIsLoadingHot(true)
-    try {
-      const res = await fetch('/api/hot/rank', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ platform: selectedPlatform, category }),
-      })
-      const data = await res.json()
-      if (data.success) { setHotRanks(data.ranks); toast.success('热榜已更新') }
-    } catch { toast.error('刷新失败') }
-    finally { setIsLoadingHot(false) }
+    await loadHotRanks(true)
   }, [selectedPlatform, category])
+
+  // 刷新热门内容
+  const handleRefreshHotContents = useCallback(async () => {
+    await loadHotContents(true)
+  }, [category])
 
   // 添加热门内容
   const handleAddHotContent = useCallback(async () => {
@@ -684,10 +697,14 @@ export default function Home() {
                       </div>
                       热门内容库
                     </CardTitle>
-                    <Dialog open={showAddHotDialog} onOpenChange={setShowAddHotDialog}>
-                      <DialogTrigger asChild>
-                        <Button size="sm"><Plus className="h-4 w-4 mr-1" />添加内容</Button>
-                      </DialogTrigger>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={handleRefreshHotContents}>
+                        <RefreshCw className="h-4 w-4 mr-1" />获取最新
+                      </Button>
+                      <Dialog open={showAddHotDialog} onOpenChange={setShowAddHotDialog}>
+                        <DialogTrigger asChild>
+                          <Button size="sm"><Plus className="h-4 w-4 mr-1" />添加内容</Button>
+                        </DialogTrigger>
                       <DialogContent className="max-w-md">
                         <DialogHeader><DialogTitle>添加热门内容</DialogTitle></DialogHeader>
                         <div className="space-y-4 pt-4">
