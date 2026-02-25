@@ -1,141 +1,118 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# 🍽️ 美食内容创作平台
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+AI驱动的社交媒体内容创作工具，专注于美食领域，支持抖音、小红书、今日头条等平台。
 
-## ✨ Technology Stack
+## ✨ 功能特性
 
-This scaffold provides a robust foundation built with:
+### 📝 AI内容创作助手
+- **热点文案生成** - 输入话题，AI自动生成多风格原创文案
+- **视频脚本生成** - 输入主题，生成短视频拍摄脚本
+- **爆款标题优化** - 输入内容，生成吸引眼球的爆款标题
+- **多平台适配** - 同一内容自动适配抖音/小红书/头条等不同风格
 
-### 🎯 Core Framework
-- **⚡ Next.js 16** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+### 📊 热点趋势分析
+- **实时热点追踪** - 抓取美食领域实时热门话题
+- **热门关键词** - 一键选择热门关键词搜索
+- **AI趋势分析** - 自动分析热点趋势
+- **最佳发布时间** - 显示各时段发布建议
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+### 🎨 内容素材工具
+- **AI封面生成** - 根据描述自动生成精美美食封面图
+- **多种风格** - 美食摄影/生活方式/极简/鲜艳活泼
+- **模板中心** - 提供探店/食谱/Vlog/科普模板
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+### 📱 多平台管理
+- **数据概览** - 总发布数/点赞/评论/分享统计
+- **发布历史** - 查看历史发布记录和数据表现
+- **账号管理** - 小红书/抖音账号连接状态
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Fetch** - Promise-based HTTP request
+## 🚀 快速开始
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
-
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
-
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
-
-## 🎯 Why This Scaffold?
-
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
-
-## 🚀 Quick Start
+### 方式一：本地开发
 
 ```bash
-# Install dependencies
+# 克隆项目
+git clone https://github.com/787676985/food-content-creator.git
+cd food-content-creator
+
+# 安装依赖
 bun install
 
-# Start development server
+# 启动开发服务器
 bun run dev
-
-# Build for production
-bun run build
-
-# Start production server
-bun start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+访问 http://localhost:3000
 
-## 🤖 Powered by Z.ai
+### 方式二：Docker部署
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+```bash
+# 克隆项目
+git clone https://github.com/787676985/food-content-creator.git
+cd food-content-creator
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+# 使用Docker Compose启动
+docker-compose up -d
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+# 查看日志
+docker-compose logs -f
 
-## 📁 Project Structure
-
-```
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+# 停止服务
+docker-compose down
 ```
 
-## 🎨 Available Features & Components
+访问 http://localhost:3000
 
-This scaffold includes a comprehensive set of modern web development tools:
+### 方式三：Docker手动构建
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+```bash
+# 构建镜像
+docker build -t food-content-creator .
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+# 运行容器
+docker run -d -p 3000:3000 --name food-content-creator food-content-creator
+```
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+## 🛠️ 技术栈
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Fetch + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+- **前端**: Next.js 15 + React 19 + TypeScript
+- **样式**: Tailwind CSS + shadcn/ui
+- **动画**: Framer Motion
+- **AI能力**: z-ai-web-dev-sdk
+- **运行时**: Bun
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+## 📁 项目结构
 
-## 🤝 Get Started with Z.ai
+```
+food-content-creator/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx          # 主页面
+│   │   ├── layout.tsx        # 布局
+│   │   └── api/              # API路由
+│   │       ├── content/      # 内容生成API
+│   │       ├── trends/       # 热点搜索API
+│   │       └── images/       # 图片生成API
+│   └── components/           # UI组件
+├── public/                   # 静态资源
+├── Dockerfile               # Docker配置
+├── docker-compose.yml       # Docker Compose配置
+└── package.json             # 项目配置
+```
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+## 🔧 环境变量
 
----
+创建 `.env` 文件配置环境变量：
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+```env
+# 可选：API密钥配置
+# OPENAI_API_KEY=your_api_key
+```
+
+## 📄 License
+
+MIT License
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
