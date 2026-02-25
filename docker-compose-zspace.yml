@@ -1,13 +1,14 @@
 # =====================================================
-# 美食内容创作平台 - 极空间部署配置
+# 内容创作平台 - 极空间部署配置
 # =====================================================
-# 复制此内容到极空间YAML编辑器即可部署
+# 支持美食和宠物两个领域
+# 数据持久化存储，配置不会丢失
 # 访问地址: http://你的极空间IP:3020
 
 services:
-  food-content-creator:
+  content-creator:
     image: oven/bun:1-alpine
-    container_name: food-content-creator
+    container_name: content-creator
     restart: unless-stopped
     user: root
     ports:
@@ -22,16 +23,46 @@ services:
       # - AI_ENABLED=true
     working_dir: /app
     volumes:
-      - food-data:/app
+      # 数据持久化 - 重要！保存所有配置和内容
+      - content-data:/app
+      - content-db:/app/prisma
     command: >
       sh -c "
-        apk add --no-cache git &&
+        set -e
+        echo '========================================'
+        echo '  内容创作平台 - 启动中...'
+        echo '========================================'
+        
+        # 安装必要工具
+        apk add --no-cache git openssl
+        
+        # 检查是否需要克隆项目
         if [ ! -f /app/package.json ]; then
+          echo '[1/5] 克隆项目代码...'
           git clone --depth 1 https://github.com/787676985/food-content-creator.git /app
-        fi &&
-        cd /app &&
-        bun install &&
-        bun run build &&
+          cd /app
+        else
+          echo '[1/5] 项目已存在'
+          cd /app
+          # 可选：更新代码
+          git pull 2>/dev/null || echo '已是最新版本'
+        fi
+        
+        echo '[2/5] 安装依赖...'
+        bun install --frozen-lockfile
+        
+        echo '[3/5] 初始化数据库...'
+        bunx prisma generate
+        bunx prisma db push --skip-generate
+        
+        echo '[4/5] 构建项目...'
+        bun run build
+        
+        echo '[5/5] 启动服务...'
+        echo '========================================'
+        echo '  服务已启动！'
+        echo '  访问地址: http://localhost:3020'
+        echo '========================================'
         exec node .next/standalone/server.js
       "
     healthcheck:
@@ -42,4 +73,7 @@ services:
       start_period: 180s
 
 volumes:
-  food-data:
+  content-data:
+    driver: local
+  content-db:
+    driver: local

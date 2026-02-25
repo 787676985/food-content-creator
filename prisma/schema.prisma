@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// 内容创作平台数据库模型
 
 generator client {
   provider = "prisma-client-js"
@@ -10,23 +6,92 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./data.db"
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
+// AI配置
+model AIConfig {
+  id        String   @id @default("default")
+  provider  String   @default("openai")
+  apiKey    String?
+  baseUrl   String   @default("https://api.openai.com/v1")
+  model     String   @default("gpt-4o-mini")
+  enabled   Boolean  @default(false)
   updatedAt DateTime @updatedAt
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
+// 图片生成配置
+model ImageConfig {
+  id        String   @id @default("default")
+  provider  String   @default("openai")
+  apiKey    String?
+  baseUrl   String   @default("https://api.openai.com/v1")
+  model     String   @default("dall-e-3")
+  enabled   Boolean  @default(false)
   updatedAt DateTime @updatedAt
+}
+
+// 社交媒体账号
+model SocialAccount {
+  id           String   @id @default(cuid())
+  platform     String   // douyin, xiaohongshu, toutiao
+  accountName  String
+  accountId    String?  // 平台账号ID
+  avatar       String?  // 头像URL
+  fansCount    Int      @default(0)
+  notesCount   Int      @default(0)
+  accessToken  String?  // 授权token（如有）
+  refreshToken String?
+  status       String   @default("active") // active, expired, disconnected
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  contents     Content[]
+}
+
+// 内容
+model Content {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // 正文内容
+  category    String   // food, pet
+  platform    String   // 目标平台
+  style       String?  // 写作风格
+  type        String   // copywriting, script, article
+  status      String   @default("draft") // draft, published
+  tags        String?  // 标签，逗号分隔
+  coverImage  String?  // 封面图
+  
+  // 发布数据
+  likes       Int      @default(0)
+  comments    Int      @default(0)
+  shares      Int      @default(0)
+  views       Int      @default(0)
+  publishedAt DateTime?
+  
+  accountId   String?
+  account     SocialAccount? @relation(fields: [accountId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 热点记录
+model TrendRecord {
+  id          String   @id @default(cuid())
+  keyword     String
+  title       String
+  snippet    String?
+  source      String?
+  category    String   // food, pet
+  createdAt   DateTime @default(now())
+}
+
+// 用户设置
+model UserSettings {
+  id          String   @id @default("default")
+  category    String   @default("food") // 当前选择的领域
+  theme       String   @default("light")
+  language    String   @default("zh-CN")
+  updatedAt   DateTime @updatedAt
 }
