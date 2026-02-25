@@ -39,14 +39,15 @@ services:
         # 检查是否需要克隆项目
         if [ ! -f /app/package.json ]; then
           echo '[1/5] 克隆项目代码...'
-          git clone --depth 1 https://github.com/787676985/food-content-creator.git /app
-          cd /app
+          git clone --depth 1 https://github.com/787676985/food-content-creator.git /tmp/repo
+          cp -r /tmp/repo/* /app/
+          cp -r /tmp/repo/.* /app/ 2>/dev/null || true
+          rm -rf /tmp/repo
         else
-          echo '[1/5] 项目已存在'
-          cd /app
-          # 可选：更新代码
-          git pull 2>/dev/null || echo '已是最新版本'
+          echo '[1/5] 项目已存在，跳过克隆'
         fi
+        
+        cd /app
         
         echo '[2/5] 安装依赖...'
         bun install --frozen-lockfile
