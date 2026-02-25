@@ -17,8 +17,39 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
-      # 如需配置API密钥，请取消注释并填写
-      # - OPENAI_API_KEY=your_api_key
+      
+      # ========== AI文本生成服务配置 ==========
+      # 选择服务商: openai, deepseek, claude, zhipu, moonshot, qwen, custom
+      # - AI_PROVIDER=openai
+      
+      # API密钥 (必填)
+      # - AI_API_KEY=sk-xxxxx
+      
+      # API地址 (可选，使用默认值)
+      # - AI_BASE_URL=https://api.openai.com/v1
+      
+      # 模型 (可选，使用默认值)
+      # - AI_MODEL=gpt-4o-mini
+      
+      # 是否启用自定义AI (true/false)
+      # - AI_ENABLED=true
+      
+      # ========== 图片生成服务配置 ==========
+      # 选择服务商: openai, stability, custom
+      # - IMAGE_PROVIDER=openai
+      
+      # API密钥 (必填)
+      # - IMAGE_API_KEY=sk-xxxxx
+      
+      # API地址 (可选)
+      # - IMAGE_BASE_URL=https://api.openai.com/v1
+      
+      # 模型 (可选)
+      # - IMAGE_MODEL=dall-e-3
+      
+      # 是否启用自定义图片服务 (true/false)
+      # - IMAGE_ENABLED=true
+      
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s

@@ -1,9 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AIConfig, ImageConfig, DEFAULT_AI_CONFIG, DEFAULT_IMAGE_CONFIG } from '@/lib/ai-config'
+import { AIConfig, ImageConfig, DEFAULT_AI_CONFIG, DEFAULT_IMAGE_CONFIG, AI_PROVIDER_PRESETS, IMAGE_PROVIDER_PRESETS } from '@/lib/ai-config'
 
 // 内存存储配置（生产环境应使用数据库）
 let currentAIConfig: AIConfig = { ...DEFAULT_AI_CONFIG }
 let currentImageConfig: ImageConfig = { ...DEFAULT_IMAGE_CONFIG }
+
+// 初始化时从环境变量读取配置
+function initFromEnv() {
+  // AI配置
+  if (process.env.AI_API_KEY) {
+    const provider = (process.env.AI_PROVIDER || 'openai') as AIConfig['provider']
+    const preset = AI_PROVIDER_PRESETS[provider] || AI_PROVIDER_PRESETS.openai
+    
+    currentAIConfig = {
+      provider,
+      apiKey: process.env.AI_API_KEY,
+      baseURL: process.env.AI_BASE_URL || preset.baseURL,
+      model: process.env.AI_MODEL || preset.defaultModel,
+      enabled: process.env.AI_ENABLED === 'true' || !process.env.AI_ENABLED,
+    }
+  }
+  
+  // 图片配置
+  if (process.env.IMAGE_API_KEY) {
+    const provider = (process.env.IMAGE_PROVIDER || 'openai') as ImageConfig['provider']
+    const preset = IMAGE_PROVIDER_PRESETS[provider] || IMAGE_PROVIDER_PRESETS.openai
+    
+    currentImageConfig = {
+      provider,
+      apiKey: process.env.IMAGE_API_KEY,
+      baseURL: process.env.IMAGE_BASE_URL || preset.baseURL,
+      model: process.env.IMAGE_MODEL || preset.defaultModel,
+      enabled: process.env.IMAGE_ENABLED === 'true' || !process.env.IMAGE_ENABLED,
+    }
+  }
+}
+
+// 初始化
+initFromEnv()
 
 /**
  * 获取当前配置
