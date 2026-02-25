@@ -52,11 +52,6 @@ next-env.d.ts
 .git
 .gitignore
 
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
-
 # 文档
 README.md
 CHANGELOG.md
